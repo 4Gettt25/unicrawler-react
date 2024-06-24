@@ -28,7 +28,7 @@
 
           # Any additional shell setup can go here
           shellHook = ''
-            export PROJECT_PATH=/home/felixg/python_projects/unicrawler
+            export PROJECT_PATH=/home/felixg/python_projects/unicrawler-react
             cd $PROJECT_PATH
             if [ -d .git ]; then
               echo "Pulling latest changes from the Git repository..."
