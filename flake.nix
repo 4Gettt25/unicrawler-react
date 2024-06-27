@@ -1,14 +1,11 @@
 {
   description = "A simple flake for a Python development environment";
-
   inputs = {
     # Nixpkgs repository for package definitions
     nixpkgs.url = "github:NixOS/nixpkgs";
-
     # Direnv integration
     flake-utils.url = "github:numtide/flake-utils";
   };
-
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
@@ -16,27 +13,40 @@
           inherit system;
         };
         python = pkgs.python310; # Use the desired Python version
+        # Override the watchfiles package to skip tests
+        pythonWithOverrides = python.override {
+          packageOverrides = self: super: {
+            watchfiles = super.watchfiles.overridePythonAttrs (oldAttrs: {
+              doCheck = false; # Disable test phase for watchfiles
+            });
+          };
+        };
       in
       {
         devShell = pkgs.mkShell {
-          # List your development dependencies here
+          # Define Python packages to install
           buildInputs = [
             python
             pkgs.git
             pkgs.nodejs
             pkgs.virtualenv
+            pythonWithOverrides.pkgs.pip
+            pythonWithOverrides.pkgs.requests # example package, replace with your requirements
+            pythonWithOverrides.pkgs.flask
+            pythonWithOverrides.pkgs.flask-cors
+            pythonWithOverrides.pkgs.openpyxl
+            pythonWithOverrides.pkgs.pandas
+            pythonWithOverrides.pkgs.numpy
+            pythonWithOverrides.pkgs.beautifulsoup4
+            pythonWithOverrides.pkgs.sqlalchemy
+            pythonWithOverrides.pkgs.pdfminer
+            pythonWithOverrides.pkgs.pymupdf
+            pythonWithOverrides.pkgs.celery
+            pythonWithOverrides.pkgs.redis
+            pythonWithOverrides.pkgs.whoosh
+            # Add the overridden watchfiles package
+            pythonWithOverrides.pkgs.watchfiles
           ];
-
-          # Define Python packages to install
-          PYTHON_PACKAGES = [
-            python.pkgs.requests # example package, replace with your requirements
-            python.pkgs.flask
-            python.pkgs.numpy
-            python.pkgs.BeautifulSoup4
-            python.pkgs.sqlalchemy
-            python.pkgs.pdfminer
-          ];
-
           shellHook = ''
             export PROJECT_PATH=/home/felixg/python_projects/unicrawler-react
             cd $PROJECT_PATH
@@ -45,17 +55,6 @@
               git pull
             else
               echo "No Git repository found in $PROJECT_PATH"
-            fi
-
-            # Create and activate virtual environment
-            if [ ! -d ".venv" ]; then
-              virtualenv .venv
-            fi
-            source .venv/bin/activate
-
-            # Install Python packages
-            pip install ${builtins.concatStringsSep " " (map (p: "${p.outPath}") PYTHON_PACKAGES)}
-            echo "Virtual environment activated and packages installed."
           '';
         };
       });

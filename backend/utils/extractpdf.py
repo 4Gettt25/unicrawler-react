@@ -1,15 +1,10 @@
 import os
-import pdfminer
-from sqlalchemy import create_engine, Column, Integer, String, Text
+from pdfminer.high_level import extract_text
 
-# Extract text from PDF file using pdfminer
 def extract_pdf_text(file_path):
-    with open(file_path, 'rb') as f:
-        paper = pdfminer.PDFFile(f)
-        text = []
-        for page in paper.pages:
-            text.extend(page.extractText())
-        return '\n'.join(text)
+    # Use pdfminer.high_level.extract_text for simplified text extraction
+    text = extract_text(file_path)
+    return text
 
 def extract_all_pdfs(directory_path):
     for filename in os.listdir(directory_path):
@@ -18,6 +13,6 @@ def extract_all_pdfs(directory_path):
             extracted_text = extract_pdf_text(file_path)
             print(f"Extracted text from {filename}:\n{extracted_text}\n")
 
-# Example usage:
-downloads_directory_path = '..\downloads'
+# Correct the path to use forward slashes and ensure it's correct relative to the script's execution context
+downloads_directory_path = '../downloads'
 extract_all_pdfs(downloads_directory_path)

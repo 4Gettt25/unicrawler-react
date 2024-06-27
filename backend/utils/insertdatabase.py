@@ -25,5 +25,5 @@ def store_all_files_in_database(directory_path):  # Fixed parameter name from 'd
             print(f"Skipping directory: {full_path}")
 
 # Example usage
-downloads_directory = os.path.expanduser('..\\downloads')  # Adjust the path to your downloads directory
+downloads_directory = os.path.expanduser('../downloads')  # Adjust the path to your downloads directory
 store_all_files_in_database(downloads_directory)

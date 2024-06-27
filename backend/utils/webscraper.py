@@ -4,7 +4,7 @@ import os
 
 # Set the URL and directory for downloading files
 url = "https://example.com"
-download_dir = "..\downloads"
+download_dir = "../downloads"
 
 # Create the download directory if it doesn't exist
 if not os.path.exists(download_dir):
