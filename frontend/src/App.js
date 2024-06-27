@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import './App.css';
+import Chat from './components/Chat'; // Adjust the path as necessary
 
 const App = () => {
   const [query, setQuery] = useState('');
@@ -24,25 +26,10 @@ const App = () => {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
-      <button onClick={handleSend}>Search</button>
+    <div className="App">
+      <Chat handleSend={handleSend} setQuery={setQuery} />
       {error && <p>{error}</p>}
-      {results && (
-        <ul>
-          {results.map((result, index) => (
-            <li key={index}>
-              <strong>File Path:</strong> {result.file_path}
-              <br />
-              <strong>Context:</strong> {result.context}
-            </li>
-          ))}
-        </ul>
-      )}
+      {results && <div>Results: {JSON.stringify(results)}</div>}
     </div>
   );
 };
