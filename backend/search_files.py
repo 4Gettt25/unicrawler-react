@@ -8,4 +8,6 @@ def search_query(query):
     parser = QueryParser("content", index.schema)
     q = parser.parse(query)
     results = searcher.search(q, limit=None)
+    writer.add_document(file_path, content)
+    writer.commit()
     return [{"file_path": r["file_path"], "context": r.highlights("content")} for r in results]

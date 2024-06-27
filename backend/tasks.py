@@ -6,4 +6,8 @@ app = Celery('tasks', broker='redis://localhost:6379/0', backend='redis://localh
 
 @app.task
 def async_search(query):
-    return search_query(query)
+    try:
+        return search_query(query)
+    except Exception as e:
+        # handle the exception here
+        print(f"An error occurred: {e}")
