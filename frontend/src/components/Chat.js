@@ -1,12 +1,11 @@
 import axios from 'axios';
 import DOMPurify from 'dompurify';
 import React, { useEffect, useRef, useState } from 'react';
-import './Chat.css'; // Ensure this path is correct
+import './Chat.css';
 
 const Chat = () => {
 	const [userInput, setUserInput] = useState('');
 	const [messages, setMessages] = useState([]);
-
 	const intervalIdRef = useRef(null);
 
 	useEffect(() => {
@@ -17,6 +16,10 @@ const Chat = () => {
 		};
 	}, []);
 
+	useEffect(() => {
+		console.log('Updated messages:', messages);
+	}, [messages]);
+
 	const handleSend = async () => {
 		try {
 			const query = userInput;
@@ -25,14 +28,18 @@ const Chat = () => {
 			});
 			const taskId = response.data.task_id;
 			console.log('Task ID:', taskId);
+
 			if (intervalIdRef.current) {
 				clearInterval(intervalIdRef.current);
 			}
+
 			intervalIdRef.current = setInterval(async () => {
 				const resultResponse = await axios.get(
 					`http://localhost:5000/results/${taskId}`
 				);
+				console.log('Result Response:', resultResponse.data);
 				if (resultResponse.data.state === 'SUCCESS') {
+					console.log('Search Results:', resultResponse.data.pdf_results);
 					setMessages(resultResponse.data.pdf_results);
 					clearInterval(intervalIdRef.current);
 					intervalIdRef.current = null;
@@ -49,17 +56,14 @@ const Chat = () => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		// Here you would send the userInput to the backend to perform the search
-		// and then update the messages state with the search results
+		handleSend();
 	};
 
-	// Inside the Chat component, right before rendering the messages
 	const sanitizedMessages = messages.map((msg) => ({
 		...msg,
 		context: DOMPurify.sanitize(msg.context),
 	}));
 
-	// Then, use sanitizedMessages for rendering
 	return (
 		<div className="chat">
 			<form onSubmit={handleSubmit}>
