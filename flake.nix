@@ -31,7 +31,9 @@
             pkgs.nodejs
             pkgs.virtualenv
             pythonWithOverrides.pkgs.pip
-            pythonWithOverrides.pkgs.requests # example package, replace with your requirements
+            pythonWithOverrides.pkgs.requests
+            pythonWithOverrides.pkgs.pytest
+            pythonWithOverrides.pkgs.pytest-mock
             pythonWithOverrides.pkgs.flask
             pythonWithOverrides.pkgs.flask-cors
             pythonWithOverrides.pkgs.openpyxl

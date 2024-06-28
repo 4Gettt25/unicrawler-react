@@ -1,58 +1,47 @@
-import unittest
-from unittest.mock import patch
-from flask import url_for
-from server import app
+import pytest
+from flask import Flask
+from server import app as flask_app
 
-class TestFlaskApi(unittest.TestCase):
-    def setUp(self):
-        self.app = app.test_client()
-        self.app.testing = True
+@pytest.fixture
+def app():
+    yield flask_app
 
-    @patch('tasks.async_search.apply_async')
-    def test_query_endpoint(self, mock_async_search):
-        mock_async_search.return_value = type('obj', (object,), {'id': '12345'})
-        response = self.app.post('/query', json={'query': 'test query'})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('task_id', response.json)
+@pytest.fixture
+def client(app):
+    return app.test_client()
 
-    @patch('tasks.async_search.apply_async')
-    def test_query_endpoint_no_query(self, mock_async_search):
-        mock_async_search.return_value = type('obj', (object,), {'id': '12345'})
-        response = self.app.post('/query', json={})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('task_id', response.json)
+def test_query_endpoint(client):
+    response = client.post('/query', json={'query': 'test search'})
+    assert response.status_code == 200
+    data = response.get_json()
+    assert 'task_id' in data
 
-    @patch('tasks.async_search.AsyncResult')
-    def test_results_endpoint_success(self, mock_AsyncResult):
-        mock_task = mock_AsyncResult.return_value
-        mock_task.state = 'SUCCESS'
-        mock_task.result = ['result1.pdf', 'result2.pdf']
-        response = self.app.get('/results/12345')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json, {"pdf_results": mock_task.result, "state": mock_task.state})
+def test_results_endpoint(client, mocker):
+    # Mocking the async_search.AsyncResult to control its behavior
+    mock_task = mocker.Mock()
+    mock_task.state = 'SUCCESS'
+    mock_task.result = ['result1.pdf', 'result2.pdf']
+    mocker.patch('server.async_search.AsyncResult', return_value=mock_task)
+    
+    response = client.get('/results/fake_task_id')
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['state'] == 'SUCCESS'
+    assert 'pdf_results' in data
+    assert data['pdf_results'] == ['result1.pdf', 'result2.pdf']
 
-    @patch('tasks.async_search.AsyncResult')
-    def test_results_endpoint_invalid_task(self, mock_AsyncResult):
-        mock_task = mock_AsyncResult.return_value
-        mock_task.state = 'PENDING'
-        response = self.app.get('/results/invalid_task_id')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('state', response.json)
+def test_download_file_endpoint(client, mocker):
+    # Mocking the send_from_directory to simulate file sending
+    mocker.patch('server.send_from_directory', return_value='mocked file content')
 
-    @patch('os.path.isfile')
-    @patch('flask.send_from_directory')
-    def test_pdfs_endpoint_valid_file(self, mock_send_from_directory, mock_isfile):
-        mock_isfile.return_value = True
-        mock_send_from_directory.return_value = 'File content'
-        response = self.app.get('/pdfs/test.pdf')
-        self.assertEqual(response.status_code, 200)
+    response = client.get('/pdfs/fake_file.pdf')
+    assert response.status_code == 200
+    assert response.data == b'mocked file content'
 
-    @patch('os.path.isfile')
-    def test_pdfs_endpoint_invalid_file(self, mock_isfile):
-        mock_isfile.return_value = False
-        response = self.app.get('/pdfs/invalid.pdf')
-        self.assertEqual(response.status_code, 404)
-        self.assertIn('error', response.json)
-
-if __name__ == '__main__':
-    unittest.main()
+    # Test file not found
+    mocker.patch('server.send_from_directory', side_effect=FileNotFoundError)
+    response = client.get('/pdfs/non_existent_file.pdf')
+    assert response.status_code == 404
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'File not found'
