@@ -1,67 +1,93 @@
-// src/components/Chat.js
 import axios from 'axios';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import './Chat.css';
 
 const Chat = () => {
 	const [messages, setMessages] = useState([]);
 	const [input, setInput] = useState('');
-	const intervalIdRef = useRef(null);
 
 	const handleSend = async () => {
-		const response = await axios.post('http://localhost:5000/query', {
-			query: input,
-		});
-		const taskId = response.data.task_id;
-		console.log('Task ID:', taskId);
+		if (input.trim() === '') return;
 
-		intervalIdRef.current = setInterval(async () => {
-			const resultResponse = await axios.get(
-				`http://localhost:5000/results/${taskId}`
-			);
-			const result = resultResponse.data;
-			console.log('Result Response:', result);
+		const userMessage = {
+			sender: 'user',
+			text: input,
+		};
 
-			if (result.state === 'SUCCESS') {
-				clearInterval(intervalIdRef.current);
-				setMessages((prevMessages) => [
-					...prevMessages,
-					{ text: result.pdf_results, user: 'bot' },
-				]);
-			}
-		}, 1000); // poll every 1 second
+		setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+		try {
+			const response = await axios.post('http://localhost:5000/query', {
+				query: input,
+			});
+			const taskId = response.data.task_id;
+
+			const fetchResults = async () => {
+				const resultResponse = await axios.get(
+					`http://localhost:5000/results/${taskId}`
+				);
+
+				if (resultResponse.data.state === 'SUCCESS') {
+					const pdfResults = resultResponse.data.pdf_results;
+
+					pdfResults.forEach((result) => {
+						let formattedContext = result.context
+							.replace(/\\n/g, '<br />') // Handle escaped newlines
+							.replace(/\n/g, '<br />') // Handle normal newlines
+							.replace(/\\u([\dA-Fa-f]{4})/g, (match, p1) =>
+								String.fromCharCode(parseInt(p1, 16))
+							); // Decode Unicode characters
+
+						const botMessage = {
+							sender: 'bot',
+							html: formattedContext,
+							pdfLink: result.file_path
+								? `http://localhost:5000/${decodeURIComponent(
+										result.file_path
+								  )}`
+								: null,
+						};
+						setMessages((prevMessages) => [...prevMessages, botMessage]);
+					});
+				} else {
+					setTimeout(fetchResults, 1000);
+				}
+			};
+
+			fetchResults();
+		} catch (error) {
+			console.error('Error:', error);
+		}
+
+		setInput('');
 	};
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		setMessages((prevMessages) => [
-			...prevMessages,
-			{ text: input, user: 'me' },
-		]);
-		setInput('');
-		handleSend();
+	const handleChange = (e) => {
+		setInput(e.target.value);
 	};
 
 	return (
 		<div className="chat-container">
 			<div className="messages">
 				{messages.map((msg, index) => (
-					<div key={index} className={`message ${msg.user}`}>
-						{msg.text}
+					<div key={index} className={`message ${msg.sender}`}>
+						{msg.html ? (
+							<p dangerouslySetInnerHTML={{ __html: msg.html }} />
+						) : (
+							<p>{msg.text}</p>
+						)}
+						{msg.pdfLink && (
+							<a href={msg.pdfLink} target="_blank" rel="noopener noreferrer">
+								Open PDF
+							</a>
+						)}
 					</div>
 				))}
 			</div>
-			<form className="input-form" onSubmit={handleSubmit}>
-				<input
-					type="text"
-					value={input}
-					onChange={(e) => setInput(e.target.value)}
-					className="input-field"
-				/>
-				<button type="submit" className="send-button">
-					Send
-				</button>
-			</form>
+			<div className="input-container">
+				<input type="text" value={input} onChange={handleChange} />
+				<button onClick={handleSend}>Send</button>
+			</div>
 		</div>
 	);
 };
