@@ -55,6 +55,7 @@
               git pull
             else
               echo "No Git repository found in $PROJECT_PATH"
+            fi
           '';
         };
       });

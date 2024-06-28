@@ -37,7 +37,7 @@ NIX_CC='/nix/store/mpm3i0sbqc9svfch6a17179fs64dz2kv-gcc-wrapper-13.3.0'
 export NIX_CC
 NIX_CC_WRAPPER_TARGET_HOST_x86_64_unknown_linux_gnu='1'
 export NIX_CC_WRAPPER_TARGET_HOST_x86_64_unknown_linux_gnu
-NIX_CFLAGS_COMPILE=' -frandom-seed=yfzxlg414y -isystem /nix/store/igfc19nl0zv95wj77sf7nnmkbykb4idj-python3-3.10.14/include -isystem /nix/store/74a6mmrgxzcg9axl1gmdz3j2y1bjd13f-nodejs-20.12.2/include -isystem /nix/store/6b1fqdwb3g56j5pazv8zkx9qd0mv3wiz-python3-3.11.9/include -isystem /nix/store/i0lnagbdvhhmr4nzxbhz5d1yhpmjh4zs-python3.10-greenlet-3.0.3/include -isystem /nix/store/w0kvhp6xwn5l0vj98m5fyxi52lynncsm-mupdf-1.23.6-dev/include -isystem /nix/store/igfc19nl0zv95wj77sf7nnmkbykb4idj-python3-3.10.14/include -isystem /nix/store/74a6mmrgxzcg9axl1gmdz3j2y1bjd13f-nodejs-20.12.2/include -isystem /nix/store/6b1fqdwb3g56j5pazv8zkx9qd0mv3wiz-python3-3.11.9/include -isystem /nix/store/i0lnagbdvhhmr4nzxbhz5d1yhpmjh4zs-python3.10-greenlet-3.0.3/include -isystem /nix/store/w0kvhp6xwn5l0vj98m5fyxi52lynncsm-mupdf-1.23.6-dev/include'
+NIX_CFLAGS_COMPILE=' -frandom-seed=p8swr3wjq3 -isystem /nix/store/igfc19nl0zv95wj77sf7nnmkbykb4idj-python3-3.10.14/include -isystem /nix/store/74a6mmrgxzcg9axl1gmdz3j2y1bjd13f-nodejs-20.12.2/include -isystem /nix/store/6b1fqdwb3g56j5pazv8zkx9qd0mv3wiz-python3-3.11.9/include -isystem /nix/store/i0lnagbdvhhmr4nzxbhz5d1yhpmjh4zs-python3.10-greenlet-3.0.3/include -isystem /nix/store/w0kvhp6xwn5l0vj98m5fyxi52lynncsm-mupdf-1.23.6-dev/include -isystem /nix/store/igfc19nl0zv95wj77sf7nnmkbykb4idj-python3-3.10.14/include -isystem /nix/store/74a6mmrgxzcg9axl1gmdz3j2y1bjd13f-nodejs-20.12.2/include -isystem /nix/store/6b1fqdwb3g56j5pazv8zkx9qd0mv3wiz-python3-3.11.9/include -isystem /nix/store/i0lnagbdvhhmr4nzxbhz5d1yhpmjh4zs-python3.10-greenlet-3.0.3/include -isystem /nix/store/w0kvhp6xwn5l0vj98m5fyxi52lynncsm-mupdf-1.23.6-dev/include'
 export NIX_CFLAGS_COMPILE
 NIX_ENFORCE_NO_NATIVE='1'
 export NIX_ENFORCE_NO_NATIVE
@@ -198,6 +198,7 @@ if [ -d .git ]; then
   git pull
 else
   echo "No Git repository found in $PROJECT_PATH"
+fi
 '
 export shellHook
 stdenv='/nix/store/d3dzfy4amjl826fb8j00qp1d9887h7hm-stdenv-linux'
