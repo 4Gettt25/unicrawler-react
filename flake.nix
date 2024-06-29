@@ -27,6 +27,8 @@
           # Define Python packages to install
           buildInputs = [
             python
+            pkgs.poppler
+            pkgs.poppler_utils
             pkgs.git
             pkgs.nodejs
             pkgs.virtualenv
@@ -43,6 +45,8 @@
             pythonWithOverrides.pkgs.sqlalchemy
             pythonWithOverrides.pkgs.pdfminer
             pythonWithOverrides.pkgs.pymupdf
+            pythonWithOverrides.pkgs.pypdf2
+            pythonWithOverrides.pkgs.pdf2image
             pythonWithOverrides.pkgs.celery
             pythonWithOverrides.pkgs.redis
             pythonWithOverrides.pkgs.whoosh
