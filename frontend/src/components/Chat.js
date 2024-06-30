@@ -30,19 +30,17 @@ const Chat = () => {
 				if (resultResponse.data.state === 'SUCCESS') {
 					const pdfResults = resultResponse.data.result;
 
-					pdfResults.forEach(async (result) => {
-						// Fetch image from backend
-						const imageResponse = await axios.post(
-							'http://localhost:5000/pdf_image',
-							{
-								pdf_path: result.file_path,
-								page_number: result.page_number,
-							}
-						);
+					pdfResults.forEach((result) => {
+						let formattedContext = result.context
+							.replace(/\\n/g, '<br />') // Handle escaped newlines
+							.replace(/\n/g, '<br />') // Handle normal newlines
+							.replace(/\\u([\dA-Fa-f]{4})/g, (match, p1) =>
+								String.fromCharCode(parseInt(p1, 16))
+							); // Decode Unicode characters
 
 						const botMessage = {
 							sender: 'bot',
-							imageUrl: imageResponse.data.image_url,
+							html: formattedContext,
 							pdfLink: result.file_path
 								? `http://localhost:5000/${decodeURIComponent(
 										result.file_path
@@ -73,8 +71,8 @@ const Chat = () => {
 			<div className="messages">
 				{messages.map((msg, index) => (
 					<div key={index} className={`message ${msg.sender}`}>
-						{msg.imageUrl ? (
-							<img src={msg.imageUrl} alt="PDF Context" />
+						{msg.html ? (
+							<p dangerouslySetInnerHTML={{ __html: msg.html }} />
 						) : (
 							<p>{msg.text}</p>
 						)}
