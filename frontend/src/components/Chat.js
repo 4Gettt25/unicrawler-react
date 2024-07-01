@@ -1,10 +1,11 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './Chat.css';
 
 const Chat = () => {
 	const [messages, setMessages] = useState([]);
 	const [input, setInput] = useState('');
+	const [taskId, setTaskId] = useState('');
 
 	const handleSend = async () => {
 		if (input.trim() === '') return;
@@ -21,15 +22,26 @@ const Chat = () => {
 				query: input,
 			});
 			const taskId = response.data.task_id;
+			setTaskId(taskId);
+		} catch (error) {
+			console.error('Error:', error);
+		}
 
-			const fetchResults = async () => {
-				const resultResponse = await axios.get(
-					`http://localhost:5000/results/${taskId}`
-				);
+		setInput('');
+	};
 
-				if (resultResponse.data.state === 'SUCCESS') {
-					const pdfResults = resultResponse.data.result;
+	const fetchResults = useCallback(async () => {
+		if (!taskId) return;
 
+		try {
+			const resultResponse = await axios.get(
+				`http://localhost:5000/results/${taskId}`
+			);
+			console.log('Result Response:', resultResponse.data); // Added logging
+
+			if (resultResponse.data.state === 'SUCCESS') {
+				const pdfResults = resultResponse.data.result;
+				if (pdfResults && pdfResults.length > 0) {
 					pdfResults.forEach(async (result) => {
 						// Fetch image from backend
 						const imageResponse = await axios.post(
@@ -52,17 +64,19 @@ const Chat = () => {
 						setMessages((prevMessages) => [...prevMessages, botMessage]);
 					});
 				} else {
-					setTimeout(fetchResults, 1000);
+					console.error('No PDF results found:', pdfResults); // Added error logging
 				}
-			};
-
-			fetchResults();
+			} else {
+				setTimeout(fetchResults, 1000);
+			}
 		} catch (error) {
-			console.error('Error:', error);
+			console.error('Error fetching results:', error);
 		}
+	}, [taskId]);
 
-		setInput('');
-	};
+	useEffect(() => {
+		fetchResults();
+	}, [taskId, fetchResults]);
 
 	const handleChange = (e) => {
 		setInput(e.target.value);
