@@ -47,6 +47,7 @@
             pythonWithOverrides.pkgs.pymupdf
             pythonWithOverrides.pkgs.pypdf2
             pythonWithOverrides.pkgs.pdf2image
+            pythonWithOverrides.pkgs.pillow
             pythonWithOverrides.pkgs.celery
             pythonWithOverrides.pkgs.redis
             pythonWithOverrides.pkgs.whoosh
