@@ -19,11 +19,11 @@ os.makedirs(IMAGE_DIRECTORY, exist_ok=True)
 
 # Ensure the database file path is correct
 try:
-    engine = db.create_engine(f'sqlite:///{DB_FILE_PATH}')
+    engine = db.create_engine(f'sqlite:///{DB_FILE_PATH}', echo=True)
     metadata = db.MetaData()
     pdf_pages = db.Table('pdf_pages', metadata,
                          db.Column('id', db.Integer, primary_key=True),
-                         db.Column('pdf_path', db.String),
+                         db.Column('pdf_path', db.String, unique=True),
                          db.Column('page_number', db.Integer),
                          db.Column('text', db.Text),
                          db.Column('image_path', db.String))
@@ -40,9 +40,15 @@ def index_pdfs():
             pdf_path = os.path.join(PDF_DIRECTORY, pdf_file)
             logging.debug(f"Processing PDF: {pdf_path}")
 
+            # Check if the PDF is already indexed
+            query = db.select([pdf_pages]).where(pdf_pages.c.pdf_path == pdf_path)
+            result = connection.execute(query).fetchone()
+            if result:
+                logging.info(f"PDF already indexed, skipping: {pdf_path}")
+                continue
+
             try:
                 pages = convert_from_path(pdf_path)
-
                 for i, page in enumerate(pages):
                     logging.debug(f"Processing page {i + 1} of {pdf_file}")
                     page_text = extract_text(pdf_path, page_numbers=[i])
@@ -62,6 +68,10 @@ def index_pdfs():
                     logging.debug(f"Inserted page {i + 1} of {pdf_file} into database")
             except Exception as e:
                 logging.error(f"Error processing {pdf_path}: {e}")
+                connection.rollback()
+            else:
+                connection.commit()
 
 if __name__ == '__main__':
     index_pdfs()
+    connection.close()

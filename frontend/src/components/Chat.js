@@ -20,52 +20,21 @@ const Chat = () => {
 			const response = await axios.post('http://localhost:5000/query', {
 				query: input,
 			});
-			const taskId = response.data.task_id;
 
-			const fetchResults = async () => {
-				const resultResponse = await axios.get(
-					`http://localhost:5000/results/${taskId}`
-				);
+			const results = response.data.results;
 
-				if (resultResponse.data.state === 'SUCCESS') {
-					const pdfResults = resultResponse.data.pdf_results;
+			results.forEach((result) => {
+				const botMessage = {
+					sender: 'bot',
+					text: result.text,
+					imageUrl: result.image_url || null,
+					pdfLink: result.pdf_path
+						? `http://localhost:5000/${decodeURIComponent(result.pdf_path)}`
+						: null,
+				};
 
-					for (const result of pdfResults) {
-						// Ensure that result contains the necessary fields
-						if (result.file_path && result.page_number) {
-							const imageResponse = await axios.post(
-								'http://localhost:5000/pdf_image',
-								{
-									pdf_path: result.file_path,
-									page_number: result.page_number,
-								}
-							);
-
-							const botMessage = {
-								sender: 'bot',
-								imageUrl: imageResponse.data.image_url,
-								pdfLink: result.file_path
-									? `http://localhost:5000/${decodeURIComponent(
-											result.file_path
-									  )}`
-									: null,
-							};
-
-							setMessages((prevMessages) => [...prevMessages, botMessage]);
-						} else {
-							const botMessage = {
-								sender: 'bot',
-								text: result.text,
-							};
-							setMessages((prevMessages) => [...prevMessages, botMessage]);
-						}
-					}
-				} else {
-					setTimeout(fetchResults, 1000);
-				}
-			};
-
-			fetchResults();
+				setMessages((prevMessages) => [...prevMessages, botMessage]);
+			});
 		} catch (error) {
 			console.error('Error:', error);
 		}
