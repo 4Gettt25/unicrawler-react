@@ -41,7 +41,7 @@ def index_pdfs():
             logging.debug(f"Processing PDF: {pdf_path}")
 
             # Check if the PDF is already indexed
-            query = db.select([pdf_pages]).where(pdf_pages.c.pdf_path == pdf_path)
+            query = db.select(pdf_pages).where(pdf_pages.c.pdf_path == pdf_path)
             result = connection.execute(query).fetchone()
             if result:
                 logging.info(f"PDF already indexed, skipping: {pdf_path}")

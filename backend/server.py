@@ -1,31 +1,51 @@
-from flask import Flask, request, jsonify
-from sqlalchemy import create_engine, MetaData, Table, select
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
+import sqlalchemy as db
+import os
 
 app = Flask(__name__)
-DATABASE_URI = 'sqlite:///pdf_index.sqlite'
-engine = create_engine(DATABASE_URI)
-metadata = MetaData()
-pdf_pages = Table('pdf_pages', metadata, autoload=True, autoload_with=engine)
+CORS(app)  # Allow CORS for all routes
+
+# Database configuration
+DB_FILE_PATH = 'pdf_index.sqlite'
+engine = db.create_engine(f'sqlite:///{DB_FILE_PATH}')
+connection = engine.connect()
+metadata = db.MetaData()
+pdf_pages = db.Table('pdf_pages', metadata, autoload_with=engine)
 
 @app.route('/query', methods=['POST'])
 def query_text():
     data = request.json
-    query = data['query']
-    connection = engine.connect()
-    s = select([pdf_pages]).where(pdf_pages.c.text.like(f'%{query}%'))
-    result = connection.execute(s).fetchall()
-    connection.close()
+    search_query = data.get('query', '')
 
-    results = [
-        {
-            "pdf_path": row['pdf_path'],
-            "page_number": row['page_number'],
-            "text": row['text']
-        }
-        for row in result
-    ]
+    # Perform the query
+    query = db.select(
+        pdf_pages.c.pdf_path,
+        pdf_pages.c.page_number,
+        pdf_pages.c.text,
+        pdf_pages.c.image_path
+    ).where(pdf_pages.c.text.contains(search_query))
+    results = connection.execute(query).fetchall()
 
-    return jsonify(results=results)
+    response = []
+    for result in results:
+        response.append({
+            'pdf_path': result[0],  # Accessing by index
+            'page_number': result[1],
+            'image_path': result[3],
+            'text': result[2]
+        })
+
+    return jsonify(response)
+
+# Serve static files (images and PDFs)
+@app.route('/imgs/<path:filename>', methods=['GET'])
+def serve_image(filename):
+    return send_from_directory('imgs', filename)
+
+@app.route('/pdfs/<path:filename>', methods=['GET'])
+def serve_pdf(filename):
+    return send_from_directory('pdfs', filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
