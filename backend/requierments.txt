@@ -1,0 +1,6 @@
+requests
+flask
+numpy
+BeautifulSoup4
+sqlalchemy
+pdfminer
