@@ -48,8 +48,6 @@
             pythonWithOverrides.pkgs.pypdf2
             pythonWithOverrides.pkgs.pdf2image
             pythonWithOverrides.pkgs.pillow
-            pythonWithOverrides.pkgs.celery
-            pythonWithOverrides.pkgs.redis
             pythonWithOverrides.pkgs.whoosh
             # Add the overridden watchfiles package
             pythonWithOverrides.pkgs.watchfiles
