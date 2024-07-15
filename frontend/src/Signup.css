@@ -26,44 +26,60 @@ html,
 
 .signup-form {
 	background: #fff;
-	padding: 20px;
-	border-radius: 5px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	padding: 30px;
+	width: 360px; /* Set a fixed width */
+	text-align: center; /* Center align text inside the form */
 }
 
 .signup-form h2 {
+	margin-bottom: 10px;
+	text-align: center; /* Center the heading */
+	font-size: 24px;
+}
+
+.signup-form p {
 	margin-bottom: 20px;
+	color: #666;
+	font-size: 14px;
+	line-height: 1.5;
 }
 
 .signup-form label {
 	display: block;
 	margin-bottom: 5px;
+	text-align: left; /* Align labels to the left */
+	font-size: 14px;
+	color: #333;
 }
 
 .signup-form input {
 	width: 100%;
-	padding: 10px;
-	margin-bottom: 10px;
+	padding: 12px;
+	margin-bottom: 15px;
 	border: 1px solid #ddd;
-	border-radius: 5px;
+	border-radius: 25px;
+	box-sizing: border-box; /* Include padding in the element's total width and height */
+	font-size: 14px;
 }
 
 .signup-form button {
 	width: 100%;
-	padding: 10px;
+	padding: 12px;
 	background: #333;
 	color: #fff;
 	border: none;
-	border-radius: 5px;
+	border-radius: 25px;
 	cursor: pointer;
+	font-size: 16px;
 }
 
-.signup-form p {
-	margin-top: 10px;
-	text-align: center;
+.signup-form .sign-in-link {
+	margin-top: 15px;
+	font-size: 14px;
+	color: #333;
 }
 
-.signup-form p a {
+.signup-form .sign-in-link a {
 	color: #333; /* Change the link color to black */
 	text-decoration: none;
 }
