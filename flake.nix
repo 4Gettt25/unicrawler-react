@@ -16,12 +16,14 @@
       {
         devShell = pkgs.mkShell {
           buildInputs = [
+            pkgs.supabase-cli
             pkgs.python310
             pkgs.virtualenv
             pkgs.poppler
             pkgs.poppler_utils
             pkgs.git
             pkgs.nodejs
+            pkgs.deno
           ];
 
           shellHook = ''
@@ -52,8 +54,17 @@
             fi
             source venv/bin/activate
             echo "Entering Python virtual environment..."
-              pip install -r requirements.txt
-            python -c "installing dependencies..."
+            if [ -f $PROJECT_PATH/requirements.txt ]; then
+              pip install -r $PROJECT_PATH/requirements.txt
+            else
+              echo "requirements.txt not found in $PROJECT_PATH"
+            fi
+            python -c "import requests" && echo "No errors!"
+
+            # Set up the Supabase database
+            echo "Starting Supabase database..."
+              supabase start
+            fi
           '';
         };
       });

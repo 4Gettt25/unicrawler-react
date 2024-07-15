@@ -1,42 +1,52 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import sqlalchemy as db
+from supabase import create_client, Client
 import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
-CORS(app)  # Allow CORS for all routes
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)  # Allow CORS for all routes
 
-# Database configuration
-DB_FILE_PATH = 'pdf_index.sqlite'
-engine = db.create_engine(f'sqlite:///{DB_FILE_PATH}')
-connection = engine.connect()
-metadata = db.MetaData()
-pdf_pages = db.Table('pdf_pages', metadata, autoload_with=engine)
+# Load environment variables from .env file
+load_dotenv()
+
+# Supabase configuration
+SUPABASE_URL = os.getenv('SUPABASE_URL')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY')
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.route('/query', methods=['POST'])
 def query_text():
     data = request.json
     search_query = data.get('query', '')
 
-    # Perform the query
-    query = db.select(
-        pdf_pages.c.pdf_path,
-        pdf_pages.c.page_number,
-        pdf_pages.c.text,
-        pdf_pages.c.image_path
-    ).where(pdf_pages.c.text.contains(search_query))
-    results = connection.execute(query).fetchall()
+    try:
+        # Perform the query
+        response = supabase.table('pdf_pages').select(
+            'pdf_path', 'page_number', 'text', 'image_path'
+        ).ilike('text', f'%{search_query}%').execute()
 
-    response = []
-    for result in results:
-        response.append({
-            'pdf_path': result[0],  # Accessing by index
-            'page_number': result[1],
-            'image_path': result[3],
-            'text': result[2]
-        })
+        # Check for errors in the response
+        if not response.data:
+            print(f"Error from Supabase: {response}")
+            return jsonify({'error': 'Error from Supabase'}), 500
 
-    return jsonify(response)
+        results = response.data
+        response_data = []
+        for result in results:
+            response_data.append({
+                'pdf_path': result['pdf_path'],
+                'page_number': result['page_number'],
+                'image_path': result['image_path'],
+                'text': result['text']
+            })
+
+        print(f"Returning {len(response_data)} results: {response_data}")
+        return jsonify(response_data)
+
+    except Exception as e:
+        print(f"Exception occurred: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 # Serve static files (images and PDFs)
 @app.route('/imgs/<path:filename>', methods=['GET'])

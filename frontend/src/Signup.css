@@ -1,0 +1,69 @@
+/* Signup.css */
+
+body,
+html,
+#root {
+	height: 100%;
+	margin: 0;
+	background-color: #ffffff; /* Ensure the background color is white */
+}
+
+.signup-page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: #ffffff; /* Ensure the background color is white */
+}
+
+.signup-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+}
+
+.signup-form {
+	background: #fff;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.signup-form h2 {
+	margin-bottom: 20px;
+}
+
+.signup-form label {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.signup-form input {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+}
+
+.signup-form button {
+	width: 100%;
+	padding: 10px;
+	background: #333;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.signup-form p {
+	margin-top: 10px;
+	text-align: center;
+}
+
+.signup-form p a {
+	color: #333; /* Change the link color to black */
+	text-decoration: none;
+}

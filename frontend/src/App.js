@@ -1,40 +1,21 @@
-import axios from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
-import Chat from './Chat'; // Adjust the path as necessary
+import Chat from './Chat';
+import Login from './Login';
+import Signup from './Signup';
 
 const App = () => {
-	const [query, setQuery] = useState('');
-	const [results, setResults] = useState(null);
-	const [error, setError] = useState('');
-
-	const handleSend = async () => {
-		try {
-			const response = await axios.post('http://localhost:5000/query', {
-				query,
-			});
-			const taskId = response.data.task_id;
-			const intervalId = setInterval(async () => {
-				const resultResponse = await axios.get(
-					`http://localhost:5000/results/${taskId}`
-				);
-				if (resultResponse.data.state === 'SUCCESS') {
-					setResults(resultResponse.data.pdf_results);
-					clearInterval(intervalId);
-				}
-			}, 1000);
-		} catch (error) {
-			setError('Error fetching results');
-			console.error(error);
-		}
-	};
-
 	return (
-		<div className="App">
-			<Chat handleSend={handleSend} setQuery={setQuery} />
-			{error && <p>{error}</p>}
-			{results && <div>Results: {JSON.stringify(results)}</div>}
-		</div>
+		<Router>
+			<div className="app-container">
+				<Routes>
+					<Route path="/login" element={<Login />} />
+					<Route path="/signup" element={<Signup />} />
+					<Route path="/chat" element={<Chat />} />
+				</Routes>
+			</div>
+		</Router>
 	);
 };
 

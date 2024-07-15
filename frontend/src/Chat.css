@@ -1,7 +1,112 @@
+/* Chat.css */
+
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f4;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.container {
+	display: flex;
+	width: 100%;
+	transition: transform 0.3s ease-in-out;
+}
+
+.sidebar {
+	width: 250px;
+	background-color: #fff;
+	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+	position: fixed;
+	height: 100%;
+	transform: translateX(-250px);
+	transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-open .sidebar {
+	transform: translateX(0);
+}
+
+.sidebar-header {
+	padding: 1rem;
+	border-bottom: 1px solid #eee;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.sidebar-header .close-btn {
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+
+.sidebar-menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	flex-grow: 1;
+}
+
+.sidebar-menu li {
+	border-bottom: 1px solid #eee;
+}
+
+.sidebar-menu a {
+	display: block;
+	padding: 1rem;
+	text-decoration: none;
+	color: #333;
+}
+
+.sidebar-menu a:hover {
+	background-color: #f9f9f9;
+}
+
+.menu-header {
+	padding: 0.5rem 1rem;
+	font-size: 0.85rem;
+	color: #999;
+	text-transform: uppercase;
+	border-top: 1px solid #eee;
+	border-bottom: none;
+}
+
+.main-content {
+	flex: 1;
+	margin-left: 0;
+	transition: margin-left 0.3s ease-in-out;
+	overflow-y: auto;
+}
+
+.sidebar-open .main-content {
+	margin-left: 250px;
+}
+
+.open-sidebar-btn {
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+	margin: 1rem;
+	z-index: 1000; /* Ensure it is above other elements */
+	transition: left 0.3s ease-in-out;
+}
+
+.sidebar-open .open-sidebar-btn {
+	left: 250px;
+}
+
 .chat-container {
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
+	padding: 1rem;
 }
 
 .messages {
@@ -10,7 +115,7 @@
 	padding: 10px;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start; /* Align items to the start by default */
+	align-items: flex-start;
 }
 
 .message {
@@ -19,20 +124,20 @@
 	background-color: #f1f0f0;
 	border-radius: 20px;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-	display: inline-block; /* Make width as wide as its content */
-	max-width: 80%; /* Optional: limit the maximum width */
+	display: inline-block;
+	max-width: 80%;
 }
 
 .message.user {
 	text-align: right;
 	background-color: #dcf8c6;
-	align-self: flex-end; /* Align user messages to the end */
+	align-self: flex-end;
 }
 
 .message.bot {
 	text-align: left;
 	background-color: #f1f0f0;
-	align-self: flex-start; /* Align bot messages to the start */
+	align-self: flex-start;
 }
 
 .input-container {
