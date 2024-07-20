@@ -1,51 +1,109 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Signup.css';
+import { supabase } from './supabaseClient';
 
 const Signup = () => {
-	const [name, setName] = useState('');
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
+	const [formData, setFormData] = useState({
+		email: '',
+		password: '',
+		name: '',
+	});
+	const [errorMessage, setErrorMessage] = useState('');
+	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
 
-	const handleSignup = (e) => {
+	const handleChange = (e) => {
+		setFormData({
+			...formData,
+			[e.target.name]: e.target.value,
+		});
+		setErrorMessage('');
+	};
+
+	const validateEmail = (email) => {
+		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return re.test(String(email).toLowerCase());
+	};
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		// Handle signup logic here
+		const { email, password, name } = formData;
+
+		if (!validateEmail(email)) {
+			setErrorMessage('Invalid email format.');
+			return;
+		}
+
+		if (password.length < 6) {
+			setErrorMessage('Password should be at least 6 characters.');
+			return;
+		}
+
+		setLoading(true);
+
+		const { data, error } = await supabase.auth.signUp({
+			email,
+			password,
+			options: {
+				data: { name },
+			},
+		});
+
+		setLoading(false);
+
+		if (error) {
+			console.error('Error signing up:', error.message);
+			setErrorMessage(error.message);
+		} else {
+			console.log('User signed up:', data);
+			navigate('/login');
+		}
 	};
 
 	return (
-		<div className="signup-page">
-			<div className="signup-container">
-				<form className="signup-form" onSubmit={handleSignup}>
-					<h2>Sign up to Unicrawler</h2>
-					<p>
-						Unicrawler does not make any external connections, and your data
-						stays securely on your locally hosted server.
-					</p>
-					<label>Name</label>
+		<div className="signup-container">
+			<div className="signup-form">
+				<h2>Sign up to Unicrawler</h2>
+				<form onSubmit={handleSubmit} autoComplete="off">
+					<label htmlFor="name">Name</label>
 					<input
 						type="text"
-						placeholder="Enter Your Full Name"
-						value={name}
-						onChange={(e) => setName(e.target.value)}
+						id="name"
+						name="name"
+						value={formData.name}
+						onChange={handleChange}
+						required
+						autoComplete="new-name"
 					/>
-					<label>Email</label>
+					<label htmlFor="email">Email</label>
 					<input
 						type="email"
-						placeholder="Enter Your Email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
+						id="email"
+						name="email"
+						value={formData.email}
+						onChange={handleChange}
+						required
+						autoComplete="new-email"
 					/>
-					<label>Password</label>
+					<label htmlFor="password">Password</label>
 					<input
 						type="password"
-						placeholder="Enter Your Password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
+						id="password"
+						name="password"
+						value={formData.password}
+						onChange={handleChange}
+						required
+						autoComplete="new-password"
 					/>
-					<button type="submit">Create Account</button>
-					<p className="sign-in-link">
-						Already have an account? <a href="/login">Sign in</a>
-					</p>
+					<button type="submit" disabled={loading}>
+						{loading ? 'Creating Account...' : 'Create Account'}
+					</button>
 				</form>
+				{errorMessage && <p className="error-message">{errorMessage}</p>}
+				<p className="sign-in-link">
+					Already have an account? <a href="/login">Sign in</a>
+				</p>
 			</div>
 		</div>
 	);

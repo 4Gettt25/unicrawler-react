@@ -1,39 +1,84 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import { supabase } from './supabaseClient';
 
 const Login = () => {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
+	const [formData, setFormData] = useState({
+		email: '',
+		password: '',
+	});
+	const [errorMessage, setErrorMessage] = useState('');
+	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
 
-	const handleLogin = (e) => {
+	const handleChange = (e) => {
+		setFormData({
+			...formData,
+			[e.target.name]: e.target.value,
+		});
+		setErrorMessage('');
+	};
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		// Handle login logic here
+		const { email, password } = formData;
+
+		setLoading(true);
+
+		const { data, error } = await supabase.auth.signInWithPassword({
+			email,
+			password,
+		});
+
+		setLoading(false);
+
+		if (error) {
+			console.error('Error signing in:', error.message);
+			if (error.message === 'Invalid login credentials') {
+				setErrorMessage('Incorrect email or password.');
+			} else {
+				setErrorMessage(error.message);
+			}
+		} else {
+			console.log('User signed in:', data);
+			navigate('/chat');
+		}
 	};
 
 	return (
-		<div className="login-page">
-			<div className="login-container">
-				<form className="login-form" onSubmit={handleLogin}>
-					<h2>Sign in to Unicrawler</h2>
-					<label>Email</label>
+		<div className="login-container">
+			<div className="login-form">
+				<h2>Sign in to Unicrawler</h2>
+				<form onSubmit={handleSubmit} autoComplete="off">
+					<label htmlFor="email">Email</label>
 					<input
 						type="email"
-						placeholder="Enter Your Email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
+						id="email"
+						name="email"
+						value={formData.email}
+						onChange={handleChange}
+						required
+						autoComplete="off"
 					/>
-					<label>Password</label>
+					<label htmlFor="password">Password</label>
 					<input
 						type="password"
-						placeholder="Enter Your Password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
+						id="password"
+						name="password"
+						value={formData.password}
+						onChange={handleChange}
+						required
+						autoComplete="off"
 					/>
-					<button type="submit">Sign in</button>
-					<p>
-						Don't have an account? <a href="/signup">Sign up</a>
-					</p>
+					<button type="submit" disabled={loading}>
+						{loading ? 'Signing In...' : 'Sign In'}
+					</button>
 				</form>
+				{errorMessage && <p className="error-message">{errorMessage}</p>}
+				<p>
+					Don't have an account? <a href="/signup">Sign up</a>
+				</p>
 			</div>
 		</div>
 	);

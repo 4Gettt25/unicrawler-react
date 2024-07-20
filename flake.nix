@@ -64,7 +64,6 @@
             # Set up the Supabase database
             echo "Starting Supabase database..."
               supabase start
-            fi
           '';
         };
       });

@@ -96,6 +96,22 @@ const Chat = () => {
 				☰
 			</button>
 			<main className="main-content">
+				<div className="chat-header">
+					<div className="user-panel">
+						<img
+							src="/path-to-user-avatar.jpg"
+							alt="User Avatar"
+							className="user-avatar"
+						/>
+						<div className="user-info">
+							<p className="user-name">Felix Günther</p>
+						</div>
+						<div className="user-actions">
+							<button className="user-action-button">Settings</button>
+							<button className="user-action-button">Sign Out</button>
+						</div>
+					</div>
+				</div>
 				<div className="chat-container">
 					<div className="messages">
 						{messages.map((msg, index) => (
