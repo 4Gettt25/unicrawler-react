@@ -1,57 +1,31 @@
 {
   description = "A simple flake for a Python development environment";
+
   inputs = {
-    # Nixpkgs repository for package definitions
     nixpkgs.url = "github:NixOS/nixpkgs";
-    # Direnv integration
     flake-utils.url = "github:numtide/flake-utils";
   };
+
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
         };
-        python = pkgs.python310; # Use the desired Python version
-        # Override the watchfiles package to skip tests
-        pythonWithOverrides = python.override {
-          packageOverrides = self: super: {
-            watchfiles = super.watchfiles.overridePythonAttrs (oldAttrs: {
-              doCheck = false; # Disable test phase for watchfiles
-            });
-          };
-        };
       in
       {
         devShell = pkgs.mkShell {
-          # Define Python packages to install
           buildInputs = [
-            python
+            pkgs.supabase-cli
+            pkgs.python310
+            pkgs.virtualenv
             pkgs.poppler
             pkgs.poppler_utils
             pkgs.git
             pkgs.nodejs
-            pkgs.virtualenv
-            pythonWithOverrides.pkgs.pip
-            pythonWithOverrides.pkgs.requests
-            pythonWithOverrides.pkgs.pytest
-            pythonWithOverrides.pkgs.pytest-mock
-            pythonWithOverrides.pkgs.flask
-            pythonWithOverrides.pkgs.flask-cors
-            pythonWithOverrides.pkgs.openpyxl
-            pythonWithOverrides.pkgs.pandas
-            pythonWithOverrides.pkgs.numpy
-            pythonWithOverrides.pkgs.beautifulsoup4
-            pythonWithOverrides.pkgs.sqlalchemy
-            pythonWithOverrides.pkgs.pdfminer
-            pythonWithOverrides.pkgs.pymupdf
-            pythonWithOverrides.pkgs.pypdf2
-            pythonWithOverrides.pkgs.pdf2image
-            pythonWithOverrides.pkgs.pillow
-            pythonWithOverrides.pkgs.whoosh
-            # Add the overridden watchfiles package
-            pythonWithOverrides.pkgs.watchfiles
+            pkgs.deno
           ];
+
           shellHook = ''
             export PROJECT_PATH=~/python_projects/unicrawler-react
             if [ ! -d $PROJECT_PATH ]; then
@@ -73,6 +47,23 @@
             else
               echo "No package.json found in frontend directory, skipping npm install"
             fi
+
+            # Set up the Python virtual environment
+            if [ ! -d venv ]; then
+              python -m venv venv
+            fi
+            source venv/bin/activate
+            echo "Entering Python virtual environment..."
+            if [ -f $PROJECT_PATH/requirements.txt ]; then
+              pip install -r $PROJECT_PATH/requirements.txt
+            else
+              echo "requirements.txt not found in $PROJECT_PATH"
+            fi
+            python -c "import requests" && echo "No errors!"
+
+            # Set up the Supabase database
+            echo "Starting Supabase database..."
+              supabase start
           '';
         };
       });

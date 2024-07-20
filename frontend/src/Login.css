@@ -1,0 +1,96 @@
+/* Login.css */
+
+body,
+html,
+#root {
+	height: 100%;
+	margin: 0;
+	background-color: #ffffff; /* Ensure the background color is white */
+}
+
+.login-page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: #ffffff; /* Ensure the background color is white */
+}
+
+.login-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+}
+
+.login-form {
+	background: #fff;
+	padding: 30px;
+	width: 360px; /* Set a fixed width */
+	text-align: center; /* Center align text inside the form */
+}
+
+.login-form h2 {
+	margin-bottom: 10px;
+	text-align: center; /* Center the heading */
+	font-size: 24px;
+}
+
+.login-form label {
+	display: block;
+	margin-bottom: 5px;
+	text-align: left; /* Align labels to the left */
+	font-size: 14px;
+	color: #333;
+}
+
+.login-form input {
+	width: 100%;
+	padding: 12px;
+	margin-bottom: 15px;
+	border: 1px solid #ddd;
+	border-radius: 25px;
+	box-sizing: border-box; /* Include padding in the element's total width and height */
+	font-size: 14px;
+}
+
+.login-form button {
+	width: 100%;
+	padding: 12px;
+	background: #333;
+	color: #fff;
+	border: none;
+	border-radius: 25px;
+	cursor: pointer;
+	font-size: 16px;
+}
+
+.login-form button:hover {
+	background-color: #555;
+}
+
+.login-form p {
+	margin-top: 15px;
+	font-size: 14px;
+	color: #333;
+}
+
+.login-form a {
+	color: #333; /* Change the link color to black */
+	text-decoration: none;
+}
+
+.login-form a:hover {
+	text-decoration: underline;
+}
+
+.login-logo {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+
+.login-logo img {
+	height: 50px;
+}

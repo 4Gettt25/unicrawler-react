@@ -1,3 +1,5 @@
+venv/
 /backend/imgs
-.venv/*
 .direnv/*
+/backend/.env
+/backend/pdfs
