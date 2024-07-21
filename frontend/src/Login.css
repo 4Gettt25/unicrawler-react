@@ -8,7 +8,7 @@ html,
 	background-color: #ffffff; /* Ensure the background color is white */
 }
 
-.login-page {
+.auth-container {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -16,7 +16,7 @@ html,
 	background-color: #ffffff; /* Ensure the background color is white */
 }
 
-.login-container {
+.auth-content {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -27,20 +27,21 @@ html,
 .login-form {
 	background: #fff;
 	padding: 30px;
-	width: 360px; /* Set a fixed width */
-	text-align: center; /* Center align text inside the form */
+	width: 360px;
+	text-align: center;
+	border-radius: 10px; /* Added border-radius for a softer look */
 }
 
 .login-form h2 {
 	margin-bottom: 10px;
-	text-align: center; /* Center the heading */
+	text-align: center;
 	font-size: 24px;
 }
 
 .login-form label {
 	display: block;
 	margin-bottom: 5px;
-	text-align: left; /* Align labels to the left */
+	text-align: left;
 	font-size: 14px;
 	color: #333;
 }
@@ -51,7 +52,7 @@ html,
 	margin-bottom: 15px;
 	border: 1px solid #ddd;
 	border-radius: 25px;
-	box-sizing: border-box; /* Include padding in the element's total width and height */
+	box-sizing: border-box;
 	font-size: 14px;
 }
 
@@ -77,20 +78,10 @@ html,
 }
 
 .login-form a {
-	color: #333; /* Change the link color to black */
+	color: #333;
 	text-decoration: none;
 }
 
 .login-form a:hover {
 	text-decoration: underline;
-}
-
-.login-logo {
-	position: absolute;
-	top: 20px;
-	left: 20px;
-}
-
-.login-logo img {
-	height: 50px;
 }

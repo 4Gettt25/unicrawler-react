@@ -8,7 +8,7 @@ html,
 	background-color: #ffffff; /* Ensure the background color is white */
 }
 
-.signup-page {
+.auth-container {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -16,7 +16,7 @@ html,
 	background-color: #ffffff; /* Ensure the background color is white */
 }
 
-.signup-container {
+.auth-content {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -27,13 +27,14 @@ html,
 .signup-form {
 	background: #fff;
 	padding: 30px;
-	width: 360px; /* Set a fixed width */
-	text-align: center; /* Center align text inside the form */
+	width: 360px;
+	text-align: center;
+	border-radius: 10px; /* Added border-radius for a softer look */
 }
 
 .signup-form h2 {
 	margin-bottom: 10px;
-	text-align: center; /* Center the heading */
+	text-align: center;
 	font-size: 24px;
 }
 
@@ -47,7 +48,7 @@ html,
 .signup-form label {
 	display: block;
 	margin-bottom: 5px;
-	text-align: left; /* Align labels to the left */
+	text-align: left;
 	font-size: 14px;
 	color: #333;
 }
@@ -58,7 +59,7 @@ html,
 	margin-bottom: 15px;
 	border: 1px solid #ddd;
 	border-radius: 25px;
-	box-sizing: border-box; /* Include padding in the element's total width and height */
+	box-sizing: border-box;
 	font-size: 14px;
 }
 
@@ -80,6 +81,6 @@ html,
 }
 
 .signup-form .sign-in-link a {
-	color: #333; /* Change the link color to black */
+	color: #333;
 	text-decoration: none;
 }

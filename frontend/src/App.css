@@ -1,11 +1,84 @@
-.App {
-	text-align: center;
+.app-container {
+	display: flex;
+	height: 100vh;
+	background-color: #222;
+	color: #fff;
 }
 
-p {
-	color: red;
+.sidebar {
+	width: 250px;
+	background-color: #333;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	color: #fff;
 }
 
-div {
-	margin: 20px;
+.sidebar-content {
+	padding: 20px;
+}
+
+.sidebar-footer {
+	padding: 20px;
+	border-top: 1px solid #444;
+	cursor: pointer;
+}
+
+.user-panel {
+	display: flex;
+	align-items: center;
+}
+
+.user-avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #888;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	margin-right: 10px;
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.user-info {
+	flex-grow: 1;
+}
+
+.user-name {
+	font-weight: bold;
+}
+
+.user-status {
+	font-size: 0.9em;
+	color: #888;
+}
+
+.user-actions {
+	margin-top: 10px;
+}
+
+.user-action-button {
+	display: block;
+	width: 100%;
+	padding: 10px;
+	margin-top: 5px;
+	background-color: #444;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+	text-align: left;
+}
+
+.user-action-button:hover {
+	background-color: #555;
+}
+
+.main-content {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
 }

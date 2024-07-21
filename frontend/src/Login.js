@@ -1,3 +1,4 @@
+// src/Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
@@ -47,38 +48,40 @@ const Login = () => {
 	};
 
 	return (
-		<div className="login-container">
-			<div className="login-form">
-				<h2>Sign in to Unicrawler</h2>
-				<form onSubmit={handleSubmit} autoComplete="off">
-					<label htmlFor="email">Email</label>
-					<input
-						type="email"
-						id="email"
-						name="email"
-						value={formData.email}
-						onChange={handleChange}
-						required
-						autoComplete="off"
-					/>
-					<label htmlFor="password">Password</label>
-					<input
-						type="password"
-						id="password"
-						name="password"
-						value={formData.password}
-						onChange={handleChange}
-						required
-						autoComplete="off"
-					/>
-					<button type="submit" disabled={loading}>
-						{loading ? 'Signing In...' : 'Sign In'}
-					</button>
-				</form>
-				{errorMessage && <p className="error-message">{errorMessage}</p>}
-				<p>
-					Don't have an account? <a href="/signup">Sign up</a>
-				</p>
+		<div className="auth-container">
+			<div className="auth-content">
+				<div className="login-form">
+					<h2>Sign in to Unicrawler</h2>
+					<form onSubmit={handleSubmit} autoComplete="off">
+						<label htmlFor="email">Email</label>
+						<input
+							type="email"
+							id="email"
+							name="email"
+							value={formData.email}
+							onChange={handleChange}
+							required
+							autoComplete="off"
+						/>
+						<label htmlFor="password">Password</label>
+						<input
+							type="password"
+							id="password"
+							name="password"
+							value={formData.password}
+							onChange={handleChange}
+							required
+							autoComplete="off"
+						/>
+						<button type="submit" disabled={loading}>
+							{loading ? 'Signing In...' : 'Sign In'}
+						</button>
+					</form>
+					{errorMessage && <p className="error-message">{errorMessage}</p>}
+					<p>
+						Don't have an account? <a href="/signup">Sign up</a>
+					</p>
+				</div>
 			</div>
 		</div>
 	);

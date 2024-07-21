@@ -16,6 +16,7 @@
       {
         devShell = pkgs.mkShell {
           buildInputs = [
+            pkgs.cypress
             pkgs.supabase-cli
             pkgs.python310
             pkgs.virtualenv
