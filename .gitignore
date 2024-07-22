@@ -3,3 +3,5 @@ venv/
 .direnv/*
 /backend/.env
 /backend/pdfs
+/frontend/.env
+/frontend/test/.env.test
