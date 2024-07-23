@@ -76,12 +76,10 @@ const Chat = () => {
 			.join('');
 	};
 
-	const userName = 'Felix Günther';
-
 	return (
 		<div className="chat-container">
 			<div className="chat-header">
-				<div className="user-avatar">{getUserInitials(userName)}</div>
+				<div className="user-avatar">{getUserInitials}</div>
 			</div>
 			<div className="messages">
 				{messages.map((msg, index) => (

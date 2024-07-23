@@ -2,6 +2,6 @@ venv/
 /backend/imgs
 .direnv/*
 /backend/.env
-/backend/pdfs
+/backend/pdfs/*
 /frontend/.env
 /frontend/test/.env.test
