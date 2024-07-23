@@ -18,3 +18,6 @@ python-dotenv
 fastapi
 pydantic
 typing
+locust
+selenium
+webdriver-manager

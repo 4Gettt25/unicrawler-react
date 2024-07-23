@@ -26,8 +26,6 @@ const App = () => {
 			.join('');
 	};
 
-	const userName = 'Felix Günther';
-
 	const isAuthPage =
 		location.pathname === '/login' || location.pathname === '/signup';
 
@@ -51,9 +49,9 @@ const App = () => {
 					</div>
 					<div className="sidebar-footer">
 						<div className="user-panel" onClick={toggleUserActions}>
-							<div className="user-avatar">{getUserInitials(userName)}</div>
+							<div className="user-avatar">{getUserInitials}</div>
 							<div className="user-info">
-								<p className="user-name">{userName}</p>
+								<p className="user-name"></p>
 								<p className="user-status">Active Users: 1</p>
 							</div>
 						</div>

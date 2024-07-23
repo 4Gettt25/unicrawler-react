@@ -2,7 +2,7 @@
 import { signIn, signUp } from '../src/services/authService';
 import { supabase } from '../src/supabaseClient';
 
-jest.mock('../supabaseClient');
+jest.mock('../src/supabaseClient');
 
 describe('authService', () => {
 	it('signs up a new user', async () => {
