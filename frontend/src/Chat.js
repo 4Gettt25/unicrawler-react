@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './Chat.css';
 
+// Chat component
 const Chat = () => {
 	const [messages, setMessages] = useState([]);
 	const [input, setInput] = useState('');
 	const [selectedImage, setSelectedImage] = useState(null);
-
+	// Function to handle send message
 	const handleSend = async () => {
 		if (input.trim() === '') return;
 
@@ -15,14 +16,14 @@ const Chat = () => {
 		};
 
 		setMessages((prevMessages) => [...prevMessages, userMessage]);
-
+		// Send the user message to the backend
 		try {
 			const response = await fetch('http://localhost:5000/query', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ query: input }),
 			});
-
+			// show the response in the console
 			const pdfResults = await response.json();
 			console.log('PDF Results:', pdfResults);
 
@@ -56,19 +57,19 @@ const Chat = () => {
 
 		setInput('');
 	};
-
+	// Function to handle input change
 	const handleChange = (e) => {
 		setInput(e.target.value);
 	};
-
+	// Function to handle image click
 	const handleImageClick = (imageUrl) => {
 		setSelectedImage(imageUrl);
 	};
-
+	// Function to close modal
 	const handleCloseModal = () => {
 		setSelectedImage(null);
 	};
-
+	// Function to get user initials
 	const getUserInitials = (name) => {
 		return name
 			.split(' ')
@@ -85,20 +86,22 @@ const Chat = () => {
 				{messages.map((msg, index) => (
 					<div key={index} className={`message ${msg.sender}`}>
 						{msg.imageUrl ? (
-							<img
-								src={msg.imageUrl}
-								alt="PDF Context"
-								className="thumbnail"
-								onClick={() => handleImageClick(msg.imageUrl)}
-							/>
+							<>
+								<img
+									src={msg.imageUrl}
+									alt="PDF Context"
+									className="thumbnail"
+									onClick={() => handleImageClick(msg.imageUrl)}
+								/>
+								{msg.pdfLink && (
+									<a href={msg.pdfLink} target="_blank" rel="noopener noreferrer">
+										Open PDF
+									</a>
+								)}
+							</>
 						) : (
 							<p>{msg.text}</p>
 						)}
-						{msg.pdfLink ? (
-							<a href={msg.pdfLink} target="_blank" rel="noopener noreferrer">
-								Open PDF
-							</a>
-						) : null}
 					</div>
 				))}
 			</div>

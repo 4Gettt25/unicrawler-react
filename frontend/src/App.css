@@ -82,3 +82,8 @@
 	flex-direction: column;
 	overflow-y: auto;
 }
+
+.redirectlink {
+	color: #4caf50;
+	text-decoration: underline;
+}

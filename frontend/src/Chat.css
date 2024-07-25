@@ -1,3 +1,5 @@
+/* Existing styles */
+
 .chat-container {
 	display: flex;
 	flex-direction: column;
@@ -93,4 +95,18 @@
 .modal-content {
 	max-width: 90%;
 	max-height: 90%;
+}
+
+/* New styles for PDF link */
+.message a {
+	color: #4caf50; /* Green color for the link */
+	text-decoration: none; /* Remove underline */
+	font-weight: bold; /* Make the link text bold */
+	margin-top: 10px; /* Space between message and link */
+	display: inline-block; /* Ensure proper padding */
+}
+
+.message a:hover {
+	color: #81c784; /* Lighter green on hover */
+	text-decoration: underline; /* Underline on hover */
 }

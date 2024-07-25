@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 import { supabase } from './supabaseClient';
 
+// Signup component
 const Signup = () => {
 	const [formData, setFormData] = useState({
 		email: '',
@@ -13,6 +14,7 @@ const Signup = () => {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 
+	// Handle form input changes
 	const handleChange = (e) => {
 		setFormData({
 			...formData,
@@ -21,11 +23,12 @@ const Signup = () => {
 		setErrorMessage('');
 	};
 
+	// Validate email
 	const validateEmail = (email) => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		return re.test(String(email).toLowerCase());
 	};
-
+	// 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const { email, password, name } = formData;
@@ -42,6 +45,7 @@ const Signup = () => {
 
 		setLoading(true);
 
+		// Sign up user
 		const { data, error } = await supabase.auth.signUp({
 			email,
 			password,
@@ -64,7 +68,7 @@ const Signup = () => {
 	return (
 		<div className="signup-container">
 			<div className="signup-form">
-				<h2>Sign up to Unicrawler</h2>
+				<h2>Sign up to EduExtract</h2>
 				<form onSubmit={handleSubmit} autoComplete="off">
 					<label htmlFor="name">Name</label>
 					<input

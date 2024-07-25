@@ -19,6 +19,8 @@
       {
         devShell = pkgs.mkShell {
           buildInputs = [
+            pkgs.google-chrome
+            pkgs.cypress
             pkgs.glibc
             pkgs.google-chrome
             pkgs.stdenv.cc.cc.lib

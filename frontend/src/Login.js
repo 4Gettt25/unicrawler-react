@@ -51,7 +51,7 @@ const Login = () => {
 		<div className="auth-container">
 			<div className="auth-content">
 				<div className="login-form">
-					<h2>Sign in to Unicrawler</h2>
+					<h2>Sign in to EduExtract</h2>
 					<form onSubmit={handleSubmit} autoComplete="off">
 						<label htmlFor="email">Email</label>
 						<input

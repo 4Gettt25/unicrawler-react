@@ -11,24 +11,25 @@ import Chat from './Chat';
 import Login from './Login';
 import Signup from './Signup';
 
+// App component
 const App = () => {
 	const [showUserActions, setShowUserActions] = useState(false);
 	const location = useLocation();
-
+	// Function to toggle user actions
 	const toggleUserActions = () => {
 		setShowUserActions(!showUserActions);
 	};
-
+	// Function to get user initials
 	const getUserInitials = (name) => {
 		return name
 			.split(' ')
 			.map((part) => part[0])
 			.join('');
 	};
-
+	// Check if the current page is an authentication page
 	const isAuthPage =
 		location.pathname === '/login' || location.pathname === '/signup';
-
+	// Render the app
 	return (
 		<div className={isAuthPage ? 'auth-container' : 'app-container'}>
 			{!isAuthPage && (
@@ -37,13 +38,13 @@ const App = () => {
 						<h2>Menu</h2>
 						<ul>
 							<li>
-								<a href="/new-chat">New Chat</a>
+								<a href="/new-chat" className='redirectlink'>New Chat</a>
 							</li>
 							<li>
-								<a href="/workspace">Workspace</a>
+								<a href="/workspace" className='redirectlink'>Workspace</a>
 							</li>
 							<li>
-								<a href="/search">Search</a>
+								<a href="/search" className='redirectlink'>Search</a>
 							</li>
 						</ul>
 					</div>
