@@ -1,8 +1,8 @@
 const dotenv = require('dotenv');
+const { set } = require('react-hook-form');
 
 module.exports = {
 	testEnvironment: 'jsdom',
-	setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
 	testMatch: ['**/test/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
 	moduleDirectories: ['node_modules', 'src'],
 	transform: {
@@ -11,6 +11,7 @@ module.exports = {
 	},
 	moduleNameMapper: {
 		'\\.css$': 'identity-obj-proxy', // Use identity-obj-proxy for CSS modules
+		'^../src/supabaseClient$': '<rootDir>/src/__mocks__/supabaseClient.js',
 	},
-	setupFiles: ['<rootDir>/loadEnvVars.js'], // Load environment variables
+	"setupFiles": ["<rootDir>/jest.setup.js"]
 };

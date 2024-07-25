@@ -5,11 +5,10 @@
 	"dependencies": {
 		"@babel/plugin-proposal-private-property-in-object": "^7.14.5",
 		"@supabase/supabase-js": "^2.44.4",
-		"@testing-library/jest-dom": "^5.17.0",
-		"@testing-library/react": "^13.4.0",
 		"@testing-library/user-event": "^13.5.0",
 		"axios": "^1.7.2",
 		"bootstrap": "^5.3.3",
+		"jest-fetch-mock": "^3.0.3",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"react-hook-form": "^7.52.1",
@@ -45,22 +44,22 @@
 	"devDependencies": {
 		"@babel/preset-env": "^7.24.8",
 		"@babel/preset-react": "^7.24.7",
+		"@testing-library/jest-dom": "^6.4.8",
+		"@testing-library/react": "^16.0.0",
 		"cypress": "^13.13.1",
 		"dotenv": "^16.4.5",
 		"jest-transform-stub": "^2.0.0"
 	},
 	"jest": {
 		"testEnvironment": "jsdom",
-		"setupFilesAfterEnv": [
-			"<rootDir>/setupTests.js"
-		],
 		"testMatch": [
 			"**/test/**/*.[jt]s?(x)",
 			"**/?(*.)+(spec|test).[tj]s?(x)"
 		],
 		"moduleDirectories": [
 			"node_modules",
-			"src"
+			"src",
+			"test"
 		]
 	}
 }
